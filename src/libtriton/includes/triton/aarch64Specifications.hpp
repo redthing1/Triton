@@ -245,6 +245,12 @@ namespace triton {
           ID_INS_LDAPR, //!< ldapr
           ID_INS_LDAPRB, //!< ldaprb
           ID_INS_LDAPRH, //!< ldaprh
+          ID_INS_LDAPUR, //!< ldapur
+          ID_INS_LDAPURB, //!< ldapurb
+          ID_INS_LDAPURH, //!< ldapurh
+          ID_INS_LDAPURSB, //!< ldapursb
+          ID_INS_LDAPURSH, //!< ldapursh
+          ID_INS_LDAPURSW, //!< ldapursw
           ID_INS_LDAXP, //!< ldaxp
           ID_INS_LDAXRB, //!< ldaxrb
           ID_INS_LDAXRH, //!< ldaxrh
@@ -410,6 +416,9 @@ namespace triton {
           ID_INS_STLRB, //!< stlrb
           ID_INS_STLRH, //!< stlrh
           ID_INS_STLR, //!< stlr
+          ID_INS_STLURB, //!< stlurb
+          ID_INS_STLURH, //!< stlurh
+          ID_INS_STLUR, //!< stlur
           ID_INS_STLXP, //!< stlxp
           ID_INS_STLXRB, //!< stlxrb
           ID_INS_STLXRH, //!< stlxrh

@@ -109,6 +109,12 @@ LDURH                         | Load Register Halfword (unscaled)
 LDURSB                        | Load Register Signed Byte (unscaled)
 LDURSH                        | Load Register Signed Halfword (unscaled)
 LDURSW                        | Load Register Signed Word (unscaled)
+LDAPUR                        | Load-Acquire RCpc Register (unscaled)
+LDAPURB                       | Load-Acquire RCpc Register Byte (unscaled)
+LDAPURH                       | Load-Acquire RCpc Register Halfword (unscaled)
+LDAPURSB                      | Load-Acquire RCpc Register Signed Byte (unscaled)
+LDAPURSH                      | Load-Acquire RCpc Register Signed Halfword (unscaled)
+LDAPURSW                      | Load-Acquire RCpc Register Signed Word (unscaled)
 LDXP                          | Load Exclusive Pair of Registers
 LDXR                          | Load Exclusive Register
 LDXRB                         | Load Exclusive Register Byte
@@ -156,6 +162,9 @@ SMULL                         | Signed Multiply Long: an alias of SMADDL
 STLR                          | Store-Release Register
 STLRB                         | Store-Release Register Byte
 STLRH                         | Store-Release Register Halfword
+STLUR                         | Store-Release Register (unscaled)
+STLURB                        | Store-Release Register Byte (unscaled)
+STLURH                        | Store-Release Register Halfword (unscaled)
 STLXR                         | Store-Release Exclusive Register
 STLXRB                        | Store-Release Exclusive Register Byte
 STLXRH                        | Store-Release Exclusive Register Halfword
@@ -301,6 +310,12 @@ namespace triton {
             case ID_INS_LDURSB:    this->ldursb_s(inst);        break;
             case ID_INS_LDURSH:    this->ldursh_s(inst);        break;
             case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
+            case ID_INS_LDAPUR:    this->ldapur_s(inst);        break;
+            case ID_INS_LDAPURB:   this->ldapurb_s(inst);       break;
+            case ID_INS_LDAPURH:   this->ldapurh_s(inst);       break;
+            case ID_INS_LDAPURSB:  this->ldapursb_s(inst);      break;
+            case ID_INS_LDAPURSH:  this->ldapursh_s(inst);      break;
+            case ID_INS_LDAPURSW:  this->ldapursw_s(inst);      break;
             case ID_INS_LDXP:      this->ldxp_s(inst);          break;
             case ID_INS_LDXR:      this->ldxr_s(inst);          break;
             case ID_INS_LDXRB:     this->ldxrb_s(inst);         break;
@@ -340,6 +355,9 @@ namespace triton {
             case ID_INS_STLR:      this->stlr_s(inst);          break;
             case ID_INS_STLRB:     this->stlrb_s(inst);         break;
             case ID_INS_STLRH:     this->stlrh_s(inst);         break;
+            case ID_INS_STLUR:     this->stlur_s(inst);         break;
+            case ID_INS_STLURB:    this->stlurb_s(inst);        break;
+            case ID_INS_STLURH:    this->stlurh_s(inst);        break;
             case ID_INS_STLXR:     this->stlxr_s(inst);         break;
             case ID_INS_STLXRB:    this->stlxrb_s(inst);        break;
             case ID_INS_STLXRH:    this->stlxrh_s(inst);        break;
@@ -3691,6 +3709,129 @@ namespace triton {
         }
 
 
+        void AArch64Semantics::ldapur_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create the semantics of the LOAD */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPUR operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapurb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->zx(dst.getBitSize() - 8, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPURB operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapurh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->zx(dst.getBitSize() - 16, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPURH operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapursb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 8, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPURSB operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapursh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 16, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPURSH operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapursw_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 32, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPURSW operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
         void AArch64Semantics::ldur_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
@@ -5252,6 +5393,66 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STTRH operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stlur_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create the semantics of the STORE */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLUR operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stlurb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(7, 0, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLURB operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stlurh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(15, 0, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLURH operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
