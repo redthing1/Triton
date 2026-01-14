@@ -949,6 +949,18 @@ namespace triton {
               tritonId = triton::arch::arm::aarch64::ID_INS_LDAR;
               break;
 
+            case triton::extlibs::capstone::ARM64_INS_LDAPR:
+              tritonId = triton::arch::arm::aarch64::ID_INS_LDAPR;
+              break;
+
+            case triton::extlibs::capstone::ARM64_INS_LDAPRB:
+              tritonId = triton::arch::arm::aarch64::ID_INS_LDAPRB;
+              break;
+
+            case triton::extlibs::capstone::ARM64_INS_LDAPRH:
+              tritonId = triton::arch::arm::aarch64::ID_INS_LDAPRH;
+              break;
+
             case triton::extlibs::capstone::ARM64_INS_LDAXP:
               tritonId = triton::arch::arm::aarch64::ID_INS_LDAXP;
               break;
@@ -2167,6 +2179,7 @@ namespace triton {
         triton::uint32 AArch64Specifications::getMemoryOperandSpecialSize(triton::uint32 id) const {
           switch (id) {
             case ID_INS_LDARB:
+            case ID_INS_LDAPRB:
             case ID_INS_LDAXRB:
             case ID_INS_LDRB:
             case ID_INS_LDRSB:
@@ -2183,6 +2196,7 @@ namespace triton {
             case ID_INS_STXRB:
               return 1;
             case ID_INS_LDARH:
+            case ID_INS_LDAPRH:
             case ID_INS_LDAXRH:
             case ID_INS_LDRH:
             case ID_INS_LDRSH:

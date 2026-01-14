@@ -285,6 +285,15 @@ namespace triton {
             //! The LDARH semantics.
             void ldarh_s(triton::arch::Instruction& inst);
 
+            //! The LDAPR semantics.
+            void ldapr_s(triton::arch::Instruction& inst);
+
+            //! The LDAPRB semantics.
+            void ldaprb_s(triton::arch::Instruction& inst);
+
+            //! The LDAPRH semantics.
+            void ldaprh_s(triton::arch::Instruction& inst);
+
             //! The LDAXR semantics.
             void ldaxr_s(triton::arch::Instruction& inst);
 

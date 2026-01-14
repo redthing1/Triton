@@ -74,6 +74,9 @@ LD4R                          | Load single 4-element structure and Replicate to
 LDAR                          | Load-Acquire Register
 LDARB                         | Load-Acquire Register Byte
 LDARH                         | Load-Acquire Register Halfword
+LDAPR                         | Load-Acquire RCpc Register
+LDAPRB                        | Load-Acquire RCpc Register Byte
+LDAPRH                        | Load-Acquire RCpc Register Halfword
 LDAXR                         | Load-Acquire Exclusive Register
 LDAXRB                        | Load-Acquire Exclusive Register Byte
 LDAXRH                        | Load-Acquire Exclusive Register Halfword
@@ -271,6 +274,9 @@ namespace triton {
             case ID_INS_LDAR:      this->ldar_s(inst);          break;
             case ID_INS_LDARB:     this->ldarb_s(inst);         break;
             case ID_INS_LDARH:     this->ldarh_s(inst);         break;
+            case ID_INS_LDAPR:     this->ldapr_s(inst);         break;
+            case ID_INS_LDAPRB:    this->ldaprb_s(inst);        break;
+            case ID_INS_LDAPRH:    this->ldaprh_s(inst);        break;
             case ID_INS_LDAXR:     this->ldaxr_s(inst);         break;
             case ID_INS_LDAXRB:    this->ldaxrb_s(inst);        break;
             case ID_INS_LDAXRH:    this->ldaxrh_s(inst);        break;
@@ -2957,6 +2963,60 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDARH operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldapr_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create the semantics of the LOAD */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPR operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldaprb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create the semantics of the LOAD */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPRB operation - LOAD access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldaprh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create the semantics of the LOAD */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAPRH operation - LOAD access");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);

@@ -1927,6 +1927,9 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.AARCH64.LDAR**<br>
 - **OPCODE.AARCH64.LDARB**<br>
 - **OPCODE.AARCH64.LDARH**<br>
+- **OPCODE.AARCH64.LDAPR**<br>
+- **OPCODE.AARCH64.LDAPRB**<br>
+- **OPCODE.AARCH64.LDAPRH**<br>
 - **OPCODE.AARCH64.LDAXP**<br>
 - **OPCODE.AARCH64.LDAXR**<br>
 - **OPCODE.AARCH64.LDAXRB**<br>
@@ -3866,6 +3869,9 @@ namespace triton {
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDAR", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAR));
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDARB", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDARB));
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDARH", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDARH));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "LDAPR", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAPR));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "LDAPRB", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAPRB));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "LDAPRH", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAPRH));
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDAXP", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAXP));
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDAXR", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAXR));
         xPyDict_SetItemString(Aarch64OpcodesDict, "LDAXRB", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_LDAXRB));

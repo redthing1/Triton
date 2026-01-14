@@ -242,6 +242,9 @@ namespace triton {
           ID_INS_LDARB, //!< ldarb
           ID_INS_LDARH, //!< ldarh
           ID_INS_LDAR, //!< ldar
+          ID_INS_LDAPR, //!< ldapr
+          ID_INS_LDAPRB, //!< ldaprb
+          ID_INS_LDAPRH, //!< ldaprh
           ID_INS_LDAXP, //!< ldaxp
           ID_INS_LDAXRB, //!< ldaxrb
           ID_INS_LDAXRH, //!< ldaxrh

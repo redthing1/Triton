@@ -1941,6 +1941,18 @@ CODE  = [
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x02\x02\x80\xd2", "movz x2, #16"),
+    (b"\x25\xc0\xbf\xf8", "ldapr x5, [x1]"),
+
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x02\x02\x80\xd2", "movz x2, #16"),
+    (b"\x25\xc0\xbf\x38", "ldaprb w5, [x1]"),
+
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x02\x02\x80\xd2", "movz x2, #16"),
+    (b"\x25\xc0\xbf\x78", "ldaprh w5, [x1]"),
+
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x02\x02\x80\xd2", "movz x2, #16"),
     (b"\x25\xfc\x5f\xc8", "ldaxr x5, [x1]"),
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x29\xfc\x5f\xc8", "ldaxr x9, [x1]"),
