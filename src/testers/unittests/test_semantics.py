@@ -477,6 +477,67 @@ class TestCustomIR(unittest.TestCase):
                 found = True
         self.assertTrue(found)
 
+    def test_rcpc_loads_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x1000)
+        ctx.setConcreteMemoryAreaValue(0x1000, b"\x11\x22\x33\x44\x55\x66\x77\x88")
+
+        ctx.processing(Instruction(b"\x25\xc0\xbf\xf8")) # ldapr x5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x5), 0x8877665544332211)
+
+        ctx.processing(Instruction(b"\x25\xc0\xbf\x38")) # ldaprb w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0x11)
+
+        ctx.processing(Instruction(b"\x25\xc0\xbf\x78")) # ldaprh w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0x2211)
+
+        ctx.processing(Instruction(b"\x25\x00\x40\xd9")) # ldapur x5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x5), 0x8877665544332211)
+
+        ctx.processing(Instruction(b"\x25\x00\x40\x19")) # ldapurb w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0x11)
+
+        ctx.processing(Instruction(b"\x25\x00\x40\x59")) # ldapurh w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0x2211)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x1100)
+        ctx.setConcreteMemoryAreaValue(0x1100, b"\x80")
+        ctx.processing(Instruction(b"\x25\x00\xc0\x19")) # ldapursb w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0xffffff80)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x1110)
+        ctx.setConcreteMemoryAreaValue(0x1110, b"\x01\x80")
+        ctx.processing(Instruction(b"\x25\x00\xc0\x59")) # ldapursh w5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.w5), 0xffff8001)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x1120)
+        ctx.setConcreteMemoryAreaValue(0x1120, b"\x01\x00\x00\x80")
+        ctx.processing(Instruction(b"\x25\x00\x80\x99")) # ldapursw x5, [x1]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x5), 0xffffffff80000001)
+
+    def test_rcpc_stores_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x5, 0x1122334455667788)
+        ctx.setConcreteRegisterValue(ctx.registers.w6, 0xaabbccdd)
+        ctx.setConcreteRegisterValue(ctx.registers.w7, 0x11223344)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x2000)
+        ctx.setConcreteMemoryAreaValue(0x2000, b"\x00" * 8)
+        ctx.processing(Instruction(b"\x25\x00\x00\xd9")) # stlur x5, [x1]
+        self.assertEqual(ctx.getConcreteMemoryAreaValue(0x2000, 8), b"\x88\x77\x66\x55\x44\x33\x22\x11")
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x2010)
+        ctx.setConcreteMemoryAreaValue(0x2010, b"\x00")
+        ctx.processing(Instruction(b"\x26\x00\x00\x19")) # stlurb w6, [x1]
+        self.assertEqual(ctx.getConcreteMemoryAreaValue(0x2010, 1), b"\xdd")
+
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0x2020)
+        ctx.setConcreteMemoryAreaValue(0x2020, b"\x00\x00")
+        ctx.processing(Instruction(b"\x27\x00\x00\x59")) # stlurh w7, [x1]
+        self.assertEqual(ctx.getConcreteMemoryAreaValue(0x2020, 2), b"\x44\x33")
+
     def test_fpu_x86(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
